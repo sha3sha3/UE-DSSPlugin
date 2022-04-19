@@ -1,4 +1,4 @@
-// Copyright (c) 2022 ForeFront electronics
+// Copyright (c) 2022 Dynamic Servers Systems
 
 #pragma once
 
