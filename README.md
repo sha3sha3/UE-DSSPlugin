@@ -132,7 +132,7 @@ Travel node could be called from client side or from server side(with mentioning
 4. TravelOptions: where to spawn player (None,Coordinate,Tag )
 5. Tag: Player start tag if Travel Options set tot Tag
 6. Location: where to spawn the player if Coordinates TravelOptions selected
-7. Yaw: Rotation arround Z-Axis Coordinates TravelOptions selected
+7. Yaw: Rotation around Z-Axis Coordinates TravelOptions selected
 ```
 # DSS Server Configuration
 Make sure to have Curl and Telnet installed on your server
