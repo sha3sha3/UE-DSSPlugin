@@ -72,7 +72,7 @@ Include the following claims:
 3. "exp": <unix expiration timestamp>
 ```
 
-Please reffere to the following site to verify your token 
+Please refer to the following site to verify your token 
 [JWTIO](https://jwt.io/)
 
 # Delegates
