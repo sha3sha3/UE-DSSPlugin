@@ -94,11 +94,11 @@ public:
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Disconnect", Keywords = ""), Category = "DSSLiteSubsystem")
 		void Disconnect();
 
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly, Category = "DSSLiteSubsystem")
 	bool bIsManuallyLaunched;
-	UPROPERTY(BlueprintReadWrite)
+	UPROPERTY(BlueprintReadWrite, Category = "DSSLiteSubsystem")
 	bool bAutoClientTravel;//Travel player to new server automatically, set false to override the logic
-	UPROPERTY(BlueprintReadWrite)
+	UPROPERTY(BlueprintReadWrite, Category = "DSSLiteSubsystem")
 	bool bAutoServerClose;//terminate UE4 server automatically when it is empty, set false to override the logic
 
 	

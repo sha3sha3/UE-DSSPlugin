@@ -7,8 +7,8 @@
 	"Category": "Other",
 	"CreatedBy": "Dynamic Servers Systems",
 	"CreatedByURL": "https://discord.com/invite/MtGpAdM",
-	"DocsURL": "",
-	"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/product/",
+	"DocsURL": "https://github.com/sha3sha3/UE-DSSPlugin/blob/master/README.md",
+	"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/product/829f1f18f7174f23a71d9fc66c629ca2",
 	"SupportURL": "",
 	"CanContainContent": true,
 	"EngineVersion": "4.27.0",
@@ -22,7 +22,6 @@
 			"LoadingPhase": "PreLoadingScreen",
 			"WhitelistPlatforms": [
 				"Win64",
-				"Win32",
 				"Linux",
 				"LinuxAArch64",
 				"Android"

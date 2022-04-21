@@ -158,6 +158,8 @@ void UDSSLiteSubsystem::Connect(FString Connection, FString PlayerName, FString 
 
 void UDSSLiteSubsystem::TravelAsync(FString MapName, bool bIsDungeon, FString InstanceID, TravelOptions TravelOptions, FString Tag, FVector Location, float Yaw, FString CharacterName)
 {
+	if (!IsConnected())
+		return;
 	switch (TravelOptions)
 	{
 	case TravelOptions::NONE:CharacterName=="" ? Hub->Send(TEXT("Travel"), MapName, bIsDungeon, InstanceID) : Hub->Send(TEXT("Travel"), MapName, bIsDungeon, InstanceID, CharacterName);
