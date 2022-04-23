@@ -167,7 +167,7 @@ void FHubConnection::ProcessMessage(const FString& InMessageStr)
 
     auto Messages = HubProtocol->ParseMessages(MessageStr);
 
-    for (const TSharedPtr<FHubMessage> Message : Messages)
+    for (auto const &Message : Messages)
     {
         switch (Message->MessageType)
         {

@@ -96,7 +96,7 @@ IWebSocket::FWebSocketMessageEvent& FConnection::OnMessage()
 
 void FConnection::Negotiate()
 {
-    TSharedRef<IHttpRequest, ESPMode::Fast> HttpRequest = FHttpModule::Get().CreateRequest();
+    TSharedRef<IHttpRequest, ESPMode::ThreadSafe> HttpRequest = FHttpModule::Get().CreateRequest();
 
 
     HttpRequest->SetVerb(TEXT("POST"));

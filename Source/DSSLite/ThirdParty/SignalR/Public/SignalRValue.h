@@ -40,291 +40,187 @@ public:
         Binary
     };
 
-#pragma warning (push)
-#pragma warning (disable: 4582 4583)
-
     /**
      * Create an object representing a EValueType::Null value.
      */
-	FSignalRValue() :
+    FSignalRValue() :
         Type(EValueType::Null)
-	{
-	    NumberValue = 0;
-	}
+    {
+    }
 
     /**
      * Create an object representing a EValueType::Null value.
      */
     FSignalRValue(std::nullptr_t) :
         Type(EValueType::Null)
-	{
-	    NumberValue = 0;
-	}
+    {
+    }
 
-	FSignalRValue(const int32 Value) :
+    FSignalRValue(const int32 InValue) :
         Type(EValueType::Number)
-	{
-		NumberValue = Value;
-	}
+    {
+        Value.Set<NumberType>(InValue);
+    }
 
-	FSignalRValue(const uint32 Value) :
+    FSignalRValue(const uint32 InValue) :
         Type(EValueType::Number)
-	{
-		NumberValue = Value;
-	}
+    {
+        Value.Set<NumberType>(InValue);
+    }
 
-	FSignalRValue(const int64 Value) :
+    FSignalRValue(const int64 InValue) :
         Type(EValueType::Number)
-	{
-		NumberValue = Value;
-	}
+    {
+        Value.Set<NumberType>(InValue);
+    }
 
-	FSignalRValue(const uint64 Value) :
+    FSignalRValue(const uint64 InValue) :
         Type(EValueType::Number)
-	{
-		NumberValue = Value;
-	}
+    {
+        Value.Set<NumberType>(InValue);
+    }
 
     /**
      * Create an object representing a EValueType::Float with the given float value.
      */
-	FSignalRValue(const float Value) :
+    FSignalRValue(const float InValue) :
         Type(EValueType::Number)
-	{
-		NumberValue = Value;
-	}
+    {
+        Value.Set<NumberType>(InValue);
+    }
 
     /**
      * Create an object representing a EValueType::Double with the given double value.
      */
-	FSignalRValue(const double Value) :
+    FSignalRValue(const double InValue) :
         Type(EValueType::Number)
-	{
-		NumberValue = Value;
-	}
+    {
+        Value.Set<NumberType>(InValue);
+    }
 
     /**
      * Create an object representing a EValueType::Object with the given map of string-value's.
      */
-    FSignalRValue(const TMap<FString, FSignalRValue>& Value) :
-        Type(EValueType::Object),
-        ObjectValue(MakeUnique<TMap<FString, FSignalRValue>>(Value))
-	{
-	}
+    FSignalRValue(const TMap<FString, FSignalRValue>& InValue) :
+        Type(EValueType::Object)
+    {
+        Value.Set<TSharedPtr<ObjectType>>(MakeShared<ObjectType>(InValue));
+    }
 
     /**
      * Create an object representing a EValueType::Object with the given map of string-value's.
      */
-    FSignalRValue(TMap<FString, FSignalRValue>&& Value) :
-        Type(EValueType::Object),
-        ObjectValue(MakeUnique<TMap<FString, FSignalRValue>>(MoveTemp(Value)))
-	{
-	}
+    FSignalRValue(TMap<FString, FSignalRValue>&& InValue) :
+        Type(EValueType::Object)
+    {
+        Value.Emplace<TSharedPtr<ObjectType>>(MakeShared<ObjectType>(MoveTemp(InValue)));
+    }
 
     /**
      * Create an object representing a EValueType::Array with the given array of value's.
      */
-    FSignalRValue(const TArray<FSignalRValue>& Value) :
-        Type(EValueType::Array),
-        ArrayValue(Value)
-	{
-	}
+    FSignalRValue(const TArray<FSignalRValue>& InValue) :
+        Type(EValueType::Array)
+    {
+        Value.Set<ArrayType>(InValue);
+    }
 
     /**
      * Create an object representing a EValueType::Array with the given array of value's.
      */
-    FSignalRValue(TArray<FSignalRValue>&& Value) :
-        Type(EValueType::Array),
-        ArrayValue(MoveTemp(Value))
-	{
-	}
+    FSignalRValue(TArray<FSignalRValue>&& InValue) :
+        Type(EValueType::Array)
+    {
+        Value.Emplace<ArrayType>(InValue);
+    }
 
     /**
      * Create an object representing a EValueType::String with the given string value.
      */
-	FSignalRValue(const FString& Value) :
-        Type(EValueType::String),
-        StringValue(Value)
-	{
-	}
+    FSignalRValue(const FString& InValue) :
+        Type(EValueType::String)
+    {
+        Value.Set<StringType>(InValue);
+    }
 
     /**
      * Create an object representing a EValueType::String with the given string value.
      */
-	FSignalRValue(FString&& Value) :
-        Type(EValueType::String),
-        StringValue(MoveTemp(Value))
-	{
-	}
+    FSignalRValue(FString&& InValue) :
+        Type(EValueType::String)
+    {
+        Value.Emplace<StringType>(MoveTemp(InValue));
+    }
 
     /**
      * Create an object representing a EValueType::Boolean with the given bool value.
      */
-    FSignalRValue(bool Value) :
-        Type(EValueType::Boolean),
-        BooleanValue(Value)
-	{
-	}
-
-    /**
-     * Create an object representing a value_type::binary with the given array of byte's.
-     */
-    FSignalRValue(const TArray<uint8>& Value) :
-        Type(EValueType::Binary),
-        BinaryValue(Value)
-	{
-	}
-
-    /**
-     * Create an object representing a value_type::binary with the given array of byte's.
-     */
-    FSignalRValue(TArray<uint8>&& Value) :
-        Type(EValueType::Binary),
-        BinaryValue(MoveTemp(Value))
-	{
-	}
-
-    /**
-     * Copies an existing value.
-     */
-    FSignalRValue(const FSignalRValue& OtherValue)
-	{
-	    Type = OtherValue.Type;
-	    switch (Type)
-	    {
-	    case EValueType::Array:
-	        new (&ArrayValue) TArray<FSignalRValue>(OtherValue.ArrayValue);
-	        break;
-	    case EValueType::String:
-	        new (&StringValue) FString(OtherValue.StringValue);
-	        break;
-	    case EValueType::Number:
-	        NumberValue = OtherValue.NumberValue;
-	        break;
-	    case EValueType::Boolean:
-	        BooleanValue = OtherValue.BooleanValue;
-	        break;
-	    case EValueType::Object:
-	        ObjectValue = MakeUnique<TMap<FString, FSignalRValue>>(*OtherValue.ObjectValue);
-	        break;
-	    case EValueType::Binary:
-	        new (&BinaryValue) TArray<uint8>(OtherValue.BinaryValue);
-	        break;
-	    default:
-            break;
-	    }
-	}
-
-    /**
-     * Moves an existing value.
-     */
-    FSignalRValue(FSignalRValue&& OtherValue) noexcept
-	{
-	    Type = MoveTemp(OtherValue.Type);
-	    switch (Type)
-	    {
-	    case EValueType::Array:
-	        new (&ArrayValue) TArray<FSignalRValue>(MoveTemp(OtherValue.ArrayValue));
-	        break;
-	    case EValueType::String:
-	        new (&StringValue) FString(MoveTemp(OtherValue.StringValue));
-	        break;
-	    case EValueType::Number:
-	        NumberValue = MoveTemp(OtherValue.NumberValue);
-	        break;
-	    case EValueType::Boolean:
-	        BooleanValue = MoveTemp(OtherValue.BooleanValue);
-	        break;
-	    case EValueType::Object:
-	        ObjectValue = MoveTemp(OtherValue.ObjectValue);
-	        break;
-	    case EValueType::Binary:
-	        new (&BinaryValue) TArray<uint8>(MoveTemp(OtherValue.BinaryValue));
-	        break;
-	    default:
-            break;
-	    }
-	}
-
-    /**
-     * Cleans up the resources associated with the value.
-     */
-    ~FSignalRValue()
+    FSignalRValue(bool InValue) :
+        Type(EValueType::Boolean)
     {
-        InternalDestruct();
+        Value.Set<BooleanType>(InValue);
+    }
+
+    /**
+     * Create an object representing a value_type::binary with the given array of byte's.
+     */
+    FSignalRValue(const TArray<uint8>& InValue) :
+        Type(EValueType::Binary)
+    {
+        Value.Set<BinaryType>(InValue);
+    }
+
+    /**
+     * Create an object representing a value_type::binary with the given array of byte's.
+     */
+    FSignalRValue(TArray<uint8>&& InValue) :
+        Type(EValueType::Binary)
+    {
+        Value.Emplace<BinaryType>(MoveTemp(InValue));
     }
 
     /**
      * Copies an existing value.
      */
+    FSignalRValue(const FSignalRValue& OtherValue)
+    {
+        Type = OtherValue.Type;
+        Value = OtherValue.Value;
+    }
+
+    /**
+     * Moves an existing value.
+     */
+    FSignalRValue(FSignalRValue&& OtherValue) noexcept
+    {
+        Type = MoveTemp(OtherValue.Type);
+        Value = MoveTemp(OtherValue.Value);
+    }
+
+    /**
+     * Cleans up the resources associated with the value.
+     */
+    ~FSignalRValue() = default;
+
+    /**
+     * Copies an existing value.
+     */
     FSignalRValue& operator=(const FSignalRValue& OtherValue)
-	{
-	    InternalDestruct();
-
-	    Type = OtherValue.Type;
-	    switch (Type)
-	    {
-	    case EValueType::Array:
-	        new (&ArrayValue) TArray<FSignalRValue>(OtherValue.ArrayValue);
-	        break;
-	    case EValueType::String:
-	        new (&StringValue) FString(OtherValue.StringValue);
-	        break;
-	    case EValueType::Number:
-	        NumberValue = OtherValue.NumberValue;
-	        break;
-	    case EValueType::Boolean:
-	        BooleanValue = OtherValue.BooleanValue;
-	        break;
-	    case EValueType::Object:
-	        ObjectValue = MakeUnique<TMap<FString, FSignalRValue>>(*OtherValue.ObjectValue);
-	        break;
-	    case EValueType::Binary:
-	        new (&BinaryValue) TArray<uint8>(OtherValue.BinaryValue);
-	        break;
-	    default:
-            break;
-	    }
-
-	    return *this;
-	}
+    {
+        Type = OtherValue.Type;
+        Value = OtherValue.Value;
+        return *this;
+    }
 
     /**
      * Moves an existing value.
      */
     FSignalRValue& operator=(FSignalRValue&& OtherValue) noexcept
-	{
-	    InternalDestruct();
-
-	    Type = MoveTemp(OtherValue.Type);
-	    switch (Type)
-	    {
-	    case EValueType::Array:
-	        new (&ArrayValue) TArray<FSignalRValue>(MoveTemp(OtherValue.ArrayValue));
-	        break;
-	    case EValueType::String:
-	        new (&StringValue) FString(MoveTemp(OtherValue.StringValue));
-	        break;
-	    case EValueType::Number:
-	        NumberValue = MoveTemp(OtherValue.NumberValue);
-	        break;
-	    case EValueType::Boolean:
-	        BooleanValue = MoveTemp(OtherValue.BooleanValue);
-	        break;
-	    case EValueType::Object:
-	        ObjectValue = MoveTemp(OtherValue.ObjectValue);
-	        break;
-	    case EValueType::Binary:
-	        new (&BinaryValue) TArray<uint8>(MoveTemp(OtherValue.BinaryValue));
-	        break;
-	    default:
-            break;
-	    }
-
-	    return *this;
-	}
-
-#pragma warning (pop)
+    {
+        Type = MoveTemp(OtherValue.Type);
+        Value = MoveTemp(OtherValue.Value);
+        return *this;
+    }
 
     /**
      * True if the object stored is a double.
@@ -382,122 +278,102 @@ public:
         return Type == EValueType::Binary;
     }
 
-	FORCEINLINE EValueType GetType() const
-	{
-		return Type;
-	}
+    FORCEINLINE EValueType GetType() const
+    {
+        return Type;
+    }
 
-	FORCEINLINE int64 AsInt() const
-	{
-		check(Type == EValueType::Number);
-		return NumberValue;
-	}
+    FORCEINLINE int64 AsInt() const
+    {
+        check(Type == EValueType::Number);
+        return Value.Get<NumberType>();
+    }
 
-	FORCEINLINE uint64 AsUInt() const
-	{
-		check(Type == EValueType::Number);
-		return NumberValue;
-	}
+    FORCEINLINE uint64 AsUInt() const
+    {
+        check(Type == EValueType::Number);
+        return Value.Get<NumberType>();
+    }
 
-	FORCEINLINE float AsFloat() const
-	{
-		check(Type == EValueType::Number);
-		return NumberValue;
-	}
+    FORCEINLINE float AsFloat() const
+    {
+        check(Type == EValueType::Number);
+        return Value.Get<NumberType>();
+    }
 
     /**
      * Returns the stored object as a double. This will throw if the underlying object is not a EValueType::Double.
      */
-	FORCEINLINE double AsDouble() const
-	{
-		check(Type == EValueType::Number);
-		return NumberValue;
-	}
+    FORCEINLINE double AsDouble() const
+    {
+        check(Type == EValueType::Number);
+        return Value.Get<NumberType>();
+    }
 
     /**
      * Returns the stored object as a double. This will throw if the underlying object is not a EValueType::Double.
      */
     FORCEINLINE double AsNumber() const
-	{
-	    check(Type == EValueType::Number);
-	    return NumberValue;
-	}
+    {
+        check(Type == EValueType::Number);
+        return Value.Get<NumberType>();
+    }
 
     /**
      * Returns the stored object as a map of property name to value. This will throw if the underlying object is not a EValueType::Object.
      */
     FORCEINLINE const TMap<FString, FSignalRValue>& AsObject() const
-	{
-	    check(Type == EValueType::Object);
-	    return *ObjectValue;
-	}
+    {
+        check(Type == EValueType::Object);
+        return *Value.Get<TSharedPtr<ObjectType>>();
+    }
 
     /**
      * Returns the stored object as an array of value's. This will throw if the underlying object is not a EValueType::Array.
      */
     FORCEINLINE const TArray<FSignalRValue>& AsArray() const
-	{
-	    check(Type == EValueType::Array);
-	    return ArrayValue;
-	}
+    {
+        check(Type == EValueType::Array);
+        return Value.Get<ArrayType>();
+    }
 
     /**
      * Returns the stored object as a string. This will throw if the underlying object is not a EValueType::String.
      */
     FORCEINLINE const FString& AsString() const
-	{
-	    check(Type == EValueType::String);
-	    return StringValue;
-	}
+    {
+        check(Type == EValueType::String);
+        return Value.Get<StringType>();
+    }
 
     /**
      * Returns the stored object a boolean. This will throw if the underlying object is not a EValueType::Boolean.
      */
     FORCEINLINE bool AsBool() const
-	{
-	    check(Type == EValueType::Boolean);
-	    return BooleanValue;
-	}
+    {
+        check(Type == EValueType::Boolean);
+        return Value.Get<BooleanType>();
+    }
 
     /**
      * Returns the stored object as an array of bytes. This will throw if the underlying object is not EValueType::Binary.
      */
     FORCEINLINE const TArray<uint8>& AsBinary() const
-	{
-	    check(Type == EValueType::Binary);
-	    return BinaryValue;
-	}
-
-private:
-    FORCEINLINE void InternalDestruct()
     {
-        switch (Type)
-        {
-        case EValueType::Array:
-            ArrayValue.~TArray();
-            break;
-        case EValueType::String:
-            StringValue.~FString();
-            break;
-        case EValueType::Object:
-            ObjectValue.Reset();
-            break;
-        case EValueType::Binary:
-            BinaryValue.~TArray();
-            break;
-        default:
-            break;
-        }
+        check(Type == EValueType::Binary);
+        return Value.Get<BinaryType>();
     }
 
-	EValueType Type;
-	union
-	{
-		double NumberValue;
-	    TUniquePtr<TMap<FString, FSignalRValue>> ObjectValue;
-	    TArray<FSignalRValue> ArrayValue;
-	    FString StringValue;
-	    bool BooleanValue;
-	    TArray<uint8> BinaryValue;
-	};
+private:
+    EValueType Type;
+
+    using NumberType = double;
+    using ObjectType = TMap<FString, FSignalRValue>;
+    using ArrayType = TArray<FSignalRValue>;
+    using StringType = FString;
+    using BooleanType = bool;
+    using BinaryType = TArray<uint8>;
+    using FInternalValueVariant = TVariant<NumberType, TSharedPtr<ObjectType>, ArrayType, StringType, BooleanType, BinaryType>;
+
+    FInternalValueVariant Value;
 };
