@@ -20,6 +20,12 @@
 			"Name": "DSSLite",
 			"Type": "Runtime",
 			"LoadingPhase": "PreLoadingScreen",
+			"PlatformAllowList": [
+				"Win64",
+				"Linux",
+				"LinuxAArch64",
+				"Android"
+			],
 			"WhitelistPlatforms": [
 				"Win64",
 				"Linux",

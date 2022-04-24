@@ -85,7 +85,7 @@ public:
 	UFUNCTION(BlueprintPure, meta = (DisplayName = "GetServerPort", Keywords = ""), Category = "DSSLiteSubsystem")
 	int32 GetServerPort() const{
 		UWorld* World = GetGameInstance()->GetWorld();
-		return (World && World->IsServer()) ? World->URL.Port : -1;
+		return (World && World->IsNetMode(ENetMode::NM_DedicatedServer)) ? World->URL.Port : -1;
 	}
 
 	UFUNCTION(BlueprintPure, meta = (DisplayName = "IsConnected", Keywords = ""), Category = "DSSLiteSubsystem")
