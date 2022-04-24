@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
+#pragma once
 
 #include "CallbackManager.h"
 #include "CoreMinimal.h"
@@ -30,8 +30,7 @@
 #include "Tickable.h"
 
 class FConnection;
-#ifndef FHUBCONNECTION_H
-#define FHUBCONNECTION_H
+
 class DSSLITE_API FHubConnection : public IHubConnection, FTickableGameObject
 {
 public:
@@ -127,4 +126,3 @@ private:
     bool bReceivedCloseMessage = false;
     bool bShouldReconnect = false;
 };
-#endif
