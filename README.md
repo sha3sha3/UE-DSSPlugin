@@ -135,6 +135,7 @@ Travel node could be called from client side or from server side(with mentioning
 7. Yaw: Rotation around Z-Axis Coordinates TravelOptions selected
 ```
 # DSS Server Configuration
+<a href="https://drive.google.com/file/d/1WL3M_lltMKTxazkAfkfxbJd5fMG4P_UV/view">Download DSS Server.</a>
 Make sure to have Curl and Telnet installed on your server
 
 ```json
