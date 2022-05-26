@@ -24,7 +24,7 @@ Dynamic servers sub-system is a plugin that helps in scaling your game players t
 
 Dynamic servers system provides bunch of features and advantages such as:
 ```
-1. Horizontally scalability
+1. Horizontal scalability
 2. Easy to use (Plug and play)
 3. Dynamic player spawning locations(Based on forward vector or predefined)
 4. Time synchronization accross servers
@@ -49,7 +49,7 @@ Dynamic servers system provides bunch of features and advantages such as:
 4. IOS 'Not tested!!'
 ```
 # Connecting to DSS Server Node
-Only on client you are responsible for connection with server, On Dedicated servers it is atomated
+Only on client you are responsible for the connection with DSS server, On Dedicated servers it is automated.
 
 <h1 align="Center">
   <br>
@@ -85,7 +85,7 @@ DSS supports a bunch of delegates that helps you build your game easily
   <br>
 </h1>
 
-### OnConnect
+### OnTravel
 Called after server respond to Travel
 
 ```
