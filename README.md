@@ -117,7 +117,7 @@ Called on Client and UE Server after connecting to DSS Server
 Called on Travel to show loading screen
 
 # Travel Nodes
-Travel node could be called from client side or from server side(with mentioning clinet that should travel)
+Travel node could be called from client side or from server side(with player character name)
 
 <h1 align="Center">
   <br>
