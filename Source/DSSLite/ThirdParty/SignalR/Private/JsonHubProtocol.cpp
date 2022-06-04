@@ -251,7 +251,7 @@ TSharedPtr<FHubMessage> FJsonHubProtocol::ParseMessage(const FString& MessagePay
         {
             TSharedPtr<FHubMessage> Message;
 
-            switch (StaticCast<ESignalRMessageType>(Obj->GetNumberField(TEXT("type"))))
+            switch (StaticCast<ESignalRMessageType>((int)Obj->GetNumberField(TEXT("type"))))
             {
             case ESignalRMessageType::Invocation:
             {
