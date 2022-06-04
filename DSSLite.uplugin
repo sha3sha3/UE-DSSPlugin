@@ -23,7 +23,7 @@
 			"PlatformAllowList": [
 				"Win64",
 				"Linux",
-				"LinuxAArch64",
+				"LinuxArm64",
 				"Android"
 			],
 			"WhitelistPlatforms": [
