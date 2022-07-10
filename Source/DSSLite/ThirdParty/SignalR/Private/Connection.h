@@ -59,6 +59,8 @@ private:
     FString Token;
     TMap<FString, FString> Headers;
 
+    const FString ClientVersion = "001A";
+
     IWebSocket::FWebSocketConnectedEvent OnConnectedEvent;
     IWebSocket::FWebSocketConnectionErrorEvent OnConnectionErrorEvent;
     IWebSocket::FWebSocketClosedEvent OnClosedEvent;

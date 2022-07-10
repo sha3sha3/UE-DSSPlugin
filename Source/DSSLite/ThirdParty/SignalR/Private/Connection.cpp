@@ -101,7 +101,7 @@ void FConnection::Negotiate()
 
     HttpRequest->SetVerb(TEXT("POST"));
     HttpRequest->OnProcessRequestComplete().BindSP(AsShared(), &FConnection::OnNegotiateResponse);
-    HttpRequest->SetURL(Host + TEXT("/negotiate?negotiateVersion=1&access_token="+Token));
+    HttpRequest->SetURL(Host + FString::Printf(TEXT("/negotiate?negotiateVersion=1&access_token=%s&client_version=%s"), *Token, *ClientVersion));
     HttpRequest->ProcessRequest();
 }
 
@@ -188,7 +188,7 @@ void FConnection::OnNegotiateResponse(FHttpRequestPtr InRequest, FHttpResponsePt
 
 void FConnection::StartWebSocket()
 {
-    const FString COnver = ConvertToWebsocketUrl(Host+"?access_token="+Token);
+    const FString COnver = ConvertToWebsocketUrl(Host + FString::Printf(TEXT("?access_token=%s&client_version=%s"), *Token, *ClientVersion));
     Connection = FWebSocketsModule::Get().CreateWebSocket(COnver, FString(), Headers);
 
     if(Connection.IsValid())
