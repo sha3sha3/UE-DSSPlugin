@@ -1,7 +1,7 @@
 {
 	"FileVersion": 3,
-	"Version": 1,
-	"VersionName": "1.0",
+	"Version": 2,
+	"VersionName": "001A",
 	"FriendlyName": "DSSLite",
 	"Description": "DSSLiteV2 plugin helps in scaling up your game's maximum number of players, by dynamically spinning, terminating and restarting UE4 servers in order to hold all the players simultaneously. Benefiting from latest cloud's technology.",
 	"Category": "Other",
@@ -11,7 +11,6 @@
 	"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/product/829f1f18f7174f23a71d9fc66c629ca2",
 	"SupportURL": "",
 	"CanContainContent": true,
-	"EngineVersion": "4.27.0",
 	"IsBetaVersion": false,
 	"IsExperimentalVersion": false,
 	"Installed": true,
