@@ -48,8 +48,9 @@ Dynamic servers system provides bunch of features and advantages such as:
 3. Android
 4. IOS 'Not tested!!'
 ```
-# Connecting to DSS Server Node
+# Connecting to DSS Server Node With Signing key(Not recommended)
 Only on client you are responsible for the connection with DSS server, On Dedicated servers it is automated.
+Since the token is generated locally (Not a good idea), if there is a time difference between client and server your token might be already expired.
 
 <h1 align="Center">
   <br>
@@ -61,7 +62,7 @@ Only on client you are responsible for the connection with DSS server, On Dedica
 2. PlayerName: Players character name
 3. Signing key: Non Base64 Encoded signing Key should be used same as server
 ```
-# Connecting to DSS Server With Token
+# Connecting to DSS Server Node With Token(Recommended)
 
 If you have your own authorization server that generates JWT token make sure to sign the token using HS256 algorithm.
 Include the following claims:
