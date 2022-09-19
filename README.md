@@ -50,7 +50,7 @@ Dynamic servers system provides bunch of features and advantages such as:
 ```
 # Connecting to DSS Server Node With Signing key(Not recommended)
 Only on client you are responsible for the connection with DSS server, On Dedicated servers it is automated.
-Since the token is generated locally (Not a good idea), if there is a time difference between client and server your token might be already expired.
+Since the token is generated locally (Not a good idea), if there is a time difference between client and server your token might be already expired. Thus you might get 401 Unauthorized. 
 
 <h1 align="Center">
   <br>
