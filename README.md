@@ -218,6 +218,9 @@ Make sure to have Curl and Telnet installed on your server
 "ip": "183.123.211.105"
 }
 ```
+## Find it helpful?
+
+Give us a ⭐️!
 
 ```
 Copyright (c) 2022 Dynamic servers systems
