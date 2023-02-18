@@ -19,6 +19,7 @@ Dynamic servers sub-system is a plugin that helps in scaling your game players t
   <br>
 </h1>
 
+# Support this project by buying a license on [Unreal Marketplace](https://www.unrealengine.com/marketplace/en-US/product/dynamic-servers-sub-system). 
 
 # DSS Features
 
