@@ -176,6 +176,16 @@ void FConnection::OnNegotiateResponse(FHttpRequestPtr InRequest, FHttpResponsePt
             {
                 ConnectionId = JsonObject->GetStringField(TEXT("connectionToken"));
             }
+            
+            if (!InResponse->GetHeader("NewHost").IsEmpty())
+            {
+                FString NewHost = InResponse->GetHeader("NewHost");
+
+                if (!NewHost.ToLower().StartsWith("http"))
+                    NewHost = "http://" + NewHost;
+
+                this->Host = NewHost;
+            }
 
             StartWebSocket();
         }
