@@ -229,6 +229,12 @@ void UDSSLiteSubsystem::Connected()
 					FGenericPlatformMisc::RequestExit(false);
 				}
 			});
+		
+		Hub->On(TEXT("PlayerDisconnected")).BindLambda([&](const TArray<FSignalRValue>& Arguments)
+			{
+				FString PlayerName = Arguments[0].AsString();
+				OnPlayerDisconnected.Broadcast(PlayerName);
+			});
 	}
 	else
 	{
