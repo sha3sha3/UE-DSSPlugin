@@ -229,7 +229,7 @@ Copyright (c) 2022 Dynamic servers systems
 
 ## 🔗 Links
 
-<a href="https://discord.com/invite/MtGpAdM"><img src="https://loghi-famosi.com/wp-content/uploads/2021/02/Discord-Logo-650x366.png" align="left" height="150" width="210" ></a>
+<a href="https://discord.gg/kFQ2bVcpPf"><img src="https://loghi-famosi.com/wp-content/uploads/2021/02/Discord-Logo-650x366.png" align="left" height="150" width="210" ></a>
 <a href="https://www.facebook.com/ForeFrontElectronics"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Facebook_Logo_%282019%29.png/1024px-Facebook_Logo_%282019%29.png" align="left" height="150" width="150" ></a>
 <a href="https://www.youtube.com/channel/UCFqsG_gNXKbujdm2XB90wOQ"><img  src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Logo_of_YouTube_%282015-2017%29.svg/502px-Logo_of_YouTube_%282015-2017%29.svg.png" align="right" height="150" width="210" ></a>
 <a href="https://www.unrealengine.com/marketplace/en-US/profile/Dynamic+Servers+Systems?count=20&sortBy=effectiveDate&sortDir=DESC&start=0"><img  src="https://cdn2.unrealengine.com/ue-logo-stacked-unreal-engine-w-677x545-fac11de0943f.png" align="right" height="150" width="170" ></a>
