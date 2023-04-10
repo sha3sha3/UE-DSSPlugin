@@ -30,6 +30,7 @@ public:
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDisconnected);//on disconnected from DSS
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FConnectionError, FString, Error);/*on connection error happened after connection attempt*/
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FShowLoadingScreen);/*triggered on travel*/
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPlayerDisconnected, FString, Name);/*On player disconnect from the game broadcast to UE Servers, Disabled on Lite Version*/
 	
 	UPROPERTY(BlueprintAssignable, meta = (DisplayName = "OnConnected", Keywords = ""), Category = "DSSLiteSubsystem")
 	FConnected OnConnected;
@@ -43,6 +44,8 @@ public:
 	FTravel OnTravel;
 	UPROPERTY(BlueprintAssignable, meta = (DisplayName = "ServerTerminate", Keywords = ""), Category = "DSSLiteSubsystem")
 	FServerTerminate ServerTerminate;
+	UPROPERTY(BlueprintAssignable, meta = (DisplayName = "OnPlayerDisconnected", Keywords = ""), Category = "DSSLiteSubsystem")
+	FPlayerDisconnected OnPlayerDisconnected;
 
 	UFUNCTION()
 	void Disconnected();
