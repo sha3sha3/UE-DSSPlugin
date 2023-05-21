@@ -6,6 +6,9 @@
 #include "DSSLiteModule.h"
 #include "GenericPlatform/GenericPlatformMisc.h"
 #include "GameFramework/PlayerController.h"
+#include "GameFramework/GameModeBase.h"
+#include "GameFramework/PlayerState.h"
+#include "PlayerEvent.h"
 #include "../ThirdParty/jwt-cpp/jwt.h"
 #include <Runtime/Slate/Public/Framework/Application/SlateApplication.h>
 
@@ -113,11 +116,10 @@ void UDSSLiteSubsystem::ConnectWithToken(FString Connection, FString Token) {
 	Hub->On(TEXT("OnConnect")).BindLambda([&](const TArray<FSignalRValue>& Arguments) 
 		{
 			FDateTime Timestamp= FDateTime::Now();
-			bool bDateTimeParsed = FDateTime::Parse(Arguments[2].AsString(), Timestamp);
+			bool bDateTimeParsed = FDateTime::Parse(Arguments[1].AsString(), Timestamp);
 			ClientID = Arguments[0].AsString();
-			ConnectionID = Arguments[1].AsString();
 			CreatedOn = Timestamp;
-		OnConnected.Broadcast(Arguments[0].AsString(), Arguments[1].AsString(), Timestamp);
+		OnConnected.Broadcast(Arguments[0].AsString(), Timestamp);
 		});
 }
 
@@ -148,11 +150,17 @@ void UDSSLiteSubsystem::Connect(FString Connection, FString PlayerName, FString 
 	Hub->On(TEXT("OnConnect")).BindLambda([&](const TArray<FSignalRValue>& Arguments)
 		{
 			FDateTime Timestamp = FDateTime::Now();
-			bool bDateTimeParsed = FDateTime::Parse(Arguments[2].AsString(), Timestamp);
+			bool bDateTimeParsed = FDateTime::Parse(Arguments[1].AsString(), Timestamp);
 			ClientID = Arguments[0].AsString();
-			ConnectionID = Arguments[1].AsString();
 			CreatedOn = Timestamp;
-			OnConnected.Broadcast(Arguments[0].AsString(), Arguments[1].AsString(), Timestamp);
+			OnConnected.Broadcast(Arguments[0].AsString(), Timestamp);
+
+			if (GetGameInstance()->IsDedicatedServerInstance()) 
+			{	
+				FGameModeEvents::OnGameModePostLoginEvent().AddUObject(this, &UDSSLiteSubsystem::OnPlayerConnect);
+
+				FGameModeEvents::OnGameModePostLoginEvent().AddUObject(this, &UDSSLiteSubsystem::OnPlayerLogout);
+			}
 		});
 }
 
@@ -229,12 +237,31 @@ void UDSSLiteSubsystem::Connected()
 					FGenericPlatformMisc::RequestExit(false);
 				}
 			});
-		
-		Hub->On(TEXT("PlayerDisconnected")).BindLambda([&](const TArray<FSignalRValue>& Arguments)
+
+		Hub->On(TEXT("OnServerClientTravel")).BindLambda([&](const TArray<FSignalRValue>& Arguments)
 			{
-				FString PlayerName = Arguments[0].AsString();
-				OnPlayerDisconnected.Broadcast(PlayerName);
+				ShowLoadingScreen.Broadcast();
+				TravelOptions Options = (TravelOptions)Arguments[5].AsInt();
+				FString UrlOptions;
+				switch (Options)
+				{
+				case TravelOptions::NONE:
+					OnServerTravel.Broadcast(Arguments[0].AsString(), Arguments[1].AsString(), Arguments[2].AsInt(), Arguments[3].AsString(), Arguments[4].AsString(), Options, "", FVector(0.f, 0.f, 0.f), -1.f);
+					UrlOptions = "?mode=0";
+					break;
+				case TravelOptions::TAG:
+					OnServerTravel.Broadcast(Arguments[0].AsString(), Arguments[1].AsString(), Arguments[2].AsInt(), Arguments[3].AsString(), Arguments[4].AsString(), Options, Arguments[6].AsString(), FVector(0.f, 0.f, 0.f), -1.f);
+					UrlOptions = "?mode=1#" + Arguments[5].AsString();
+					break;
+				case TravelOptions::COORDINATES:
+					OnServerTravel.Broadcast(Arguments[0].AsString(), Arguments[1].AsString(), Arguments[2].AsInt(), Arguments[3].AsString(), Arguments[4].AsString(), Options, "", FVector(Arguments[6].AsFloat(), Arguments[7].AsFloat(), Arguments[8].AsFloat()), Arguments[9].AsFloat());
+					UrlOptions = FString::Printf(TEXT("?mode=2?Location=X=%f,Y=%f,Z=%f?Rotation=%f"), Arguments[6].AsFloat(), Arguments[7].AsFloat(), Arguments[8].AsFloat(), Arguments[9].AsFloat());
+					break;
+				default:
+					break;
+				}
 			});
+		
 	}
 	else
 	{
@@ -278,4 +305,16 @@ void UDSSLiteSubsystem::Connected()
 				}
 			});
 	}
+}
+
+void UDSSLiteSubsystem::OnPlayerConnect(AGameModeBase* GameModeBase, APlayerController* PlayerController)
+{
+	FString PlayerName = PlayerController->PlayerState->GetPlayerName();
+	Hub->Send(TEXT("PlayerEvent"), PlayerName, (int)PlayerEvent::CONNECTED, GameModeBase->GetNumPlayers());
+}
+
+void UDSSLiteSubsystem::OnPlayerLogout(AGameModeBase* GameModeBase, APlayerController* PlayerController)
+{
+	FString PlayerName = PlayerController->PlayerState->GetPlayerName();
+	Hub->Send(TEXT("PlayerEvent"), PlayerName, (int)PlayerEvent::DISCONNECTED, GameModeBase->GetNumPlayers());
 }

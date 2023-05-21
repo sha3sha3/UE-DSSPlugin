@@ -24,14 +24,14 @@ public:
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Connect", Keywords = ""), Category = "DSSLiteSubsystem")
 	void Connect(FString Connection, FString PlayerName, FString SigningKey);/*key should not be base64 encoded*/
 
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FConnected, FString, ClientID, FString, ConnectionID, FDateTime, Timestamp);/*on connected to dss*/
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FConnected, FString, ClientID, FDateTime, Timestamp);/*on connected to dss*/
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_EightParams(FTravel, FString, ServerIP, int64, ServerPort, FString, PlayerName, FString, ServerConnectionID,TravelOptions, Options, FString, Tag, FVector, Coordinates, float, Yaw);//on travel async
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_NineParams(FOnServerTravel, FString, ServerIP, FString, PrivateServerIP, int64, ServerPort, FString, PlayerName, FString, ServerConnectionID, TravelOptions, Options, FString, Tag, FVector, Coordinates, float, Yaw);//on travel async
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FServerTerminate);//on receive termination request
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDisconnected);//on disconnected from DSS
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FConnectionError, FString, Error);/*on connection error happened after connection attempt*/
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FShowLoadingScreen);/*triggered on travel*/
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPlayerDisconnected, FString, Name);/*On player disconnect from the game broadcast to UE Servers, Disabled on Lite Version*/
-	
+
 	UPROPERTY(BlueprintAssignable, meta = (DisplayName = "OnConnected", Keywords = ""), Category = "DSSLiteSubsystem")
 	FConnected OnConnected;
 	UPROPERTY(BlueprintAssignable, meta = (DisplayName = "OnDisconnected", Keywords = ""), Category = "DSSLiteSubsystem")
@@ -42,10 +42,10 @@ public:
 	FShowLoadingScreen ShowLoadingScreen;
 	UPROPERTY(BlueprintAssignable, meta = (DisplayName = "OnTravel", Keywords = ""), Category = "DSSLiteSubsystem")
 	FTravel OnTravel;
+	UPROPERTY(BlueprintAssignable, meta = (DisplayName = "OnServerTravel", Keywords = ""), Category = "DSSLiteSubsystem")
+	FOnServerTravel OnServerTravel;
 	UPROPERTY(BlueprintAssignable, meta = (DisplayName = "ServerTerminate", Keywords = ""), Category = "DSSLiteSubsystem")
 	FServerTerminate ServerTerminate;
-	UPROPERTY(BlueprintAssignable, meta = (DisplayName = "OnPlayerDisconnected", Keywords = ""), Category = "DSSLiteSubsystem")
-	FPlayerDisconnected OnPlayerDisconnected;
 
 	UFUNCTION()
 	void Disconnected();
@@ -67,12 +67,6 @@ public:
 		if (!GetGameInstance()->IsDedicatedServerInstance() && IsConnected())
 			return;
 		TravelAsync(MapName, bIsDungeon, InstanceID, TravelOptions, Tag, Location, Yaw, CharacterName);
-	}
-	
-
-	UFUNCTION(BlueprintPure, meta = (DisplayName = "GetConnectionID", Keywords = ""), Category = "DSSLiteSubsystem")
-	FString GetConnectionID() const{
-		return ConnectionID;
 	}
 
 	UFUNCTION(BlueprintPure, meta = (DisplayName = "GetClientID", Keywords = ""), Category = "DSSLiteSubsystem")
@@ -104,16 +98,15 @@ public:
 	UPROPERTY(BlueprintReadWrite, Category = "DSSLiteSubsystem")
 	bool bAutoServerClose;//terminate UE4 server automatically when it is empty, set false to override the logic
 
-	
-
 	UDSSLiteSubsystem();
 
 private:
 	TSharedPtr<IHubConnection> Hub = nullptr;
-	FString ConnectionID = "";
 	FString ClientID = "";
 	FDateTime CreatedOn = FDateTime::Now();
 	void TravelAsync(FString MapName, bool bIsDungeon, FString InstanceID, TravelOptions TravelOptions, FString Tag, FVector Location, float Yaw, FString CharacterName="");
+	void OnPlayerLogout(AGameModeBase*, APlayerController*);
+	void OnPlayerConnect(AGameModeBase*, APlayerController*);
 	
 	
 protected:
