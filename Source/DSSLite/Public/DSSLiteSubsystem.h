@@ -54,6 +54,30 @@ public:
 	UFUNCTION()
 	void Connected();
 
+	UFUNCTION(BlueprintPure, meta = (DisplayName = "FormatTravelUrl", Keywords = ""), Category = "DSSLiteSubsystem")
+		FORCEINLINE FString FormatTravelUrl (TravelOptions TravelOptions, FString ServerIp, int ServerPort, FString CharacterName, FString Tag, FVector Location, float Yaw) 
+	{
+		FString UrlOptions;
+
+		switch (TravelOptions)
+		{
+		case TravelOptions::NONE:
+			UrlOptions = "?mode=0";
+			break;
+		case TravelOptions::TAG:
+			UrlOptions = "?mode=1#" + Tag;
+			break;
+		case TravelOptions::COORDINATES:
+			UrlOptions = FString::Printf(TEXT("?mode=2?Location=X=%f,Y=%f,Z=%f?Rotation=%f"), Location.X, Location.Y, Location.Z, Yaw);
+			break;
+		default:
+			UrlOptions = "";
+			break;
+		}
+
+		return  FString::Printf(TEXT("%s:%d?PlayerName=%s%s"), *ServerIp, ServerPort, *CharacterName, *UrlOptions);
+
+	}
 	
 
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "OnClientTravelAsync", Keywords = ""), Category = "DSSLiteSubsystem")
@@ -105,7 +129,7 @@ private:
 	FString ClientID = "";
 	FDateTime CreatedOn = FDateTime::Now();
 	void TravelAsync(FString MapName, bool bIsDungeon, FString InstanceID, TravelOptions TravelOptions, FString Tag, FVector Location, float Yaw, FString CharacterName="");
-	void OnPlayerLogout(AGameModeBase*, APlayerController*);
+	void OnPlayerLogout(AGameModeBase*, AController*);
 	void OnPlayerConnect(AGameModeBase*, APlayerController*);
 	
 	
