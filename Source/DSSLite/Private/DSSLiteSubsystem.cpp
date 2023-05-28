@@ -240,22 +240,18 @@ void UDSSLiteSubsystem::Connected()
 
 		Hub->On(TEXT("OnServerClientTravel")).BindLambda([&](const TArray<FSignalRValue>& Arguments)
 			{
-				ShowLoadingScreen.Broadcast();
 				TravelOptions Options = (TravelOptions)Arguments[5].AsInt();
 				FString UrlOptions;
 				switch (Options)
 				{
 				case TravelOptions::NONE:
 					OnServerTravel.Broadcast(Arguments[0].AsString(), Arguments[1].AsString(), Arguments[2].AsInt(), Arguments[3].AsString(), Arguments[4].AsString(), Options, "", FVector(0.f, 0.f, 0.f), -1.f);
-					UrlOptions = "?mode=0";
 					break;
 				case TravelOptions::TAG:
 					OnServerTravel.Broadcast(Arguments[0].AsString(), Arguments[1].AsString(), Arguments[2].AsInt(), Arguments[3].AsString(), Arguments[4].AsString(), Options, Arguments[6].AsString(), FVector(0.f, 0.f, 0.f), -1.f);
-					UrlOptions = "?mode=1#" + Arguments[6].AsString();
 					break;
 				case TravelOptions::COORDINATES:
-					OnServerTravel.Broadcast(Arguments[0].AsString(), Arguments[1].AsString(), Arguments[2].AsInt(), Arguments[3].AsString(), Arguments[4].AsString(), Options, "", FVector(Arguments[6].AsFloat(), Arguments[7].AsFloat(), Arguments[8].AsFloat()), Arguments[9].AsFloat());
-					UrlOptions = FString::Printf(TEXT("?mode=2?Location=X=%f,Y=%f,Z=%f?Rotation=%f"), Arguments[6].AsFloat(), Arguments[7].AsFloat(), Arguments[8].AsFloat(), Arguments[9].AsFloat());
+					OnServerTravel.Broadcast(Arguments[0].AsString(), Arguments[1].AsString(), Arguments[2].AsInt(), Arguments[3].AsString(), Arguments[4].AsString(), Options, "", FVector(Arguments[6].AsFloat(), Arguments[7].AsFloat(), Arguments[8].AsFloat()), Arguments[9].AsFloat());UrlOptions = FString::Printf(TEXT("?mode=2?Location=X=%f,Y=%f,Z=%f?Rotation=%f"), Arguments[6].AsFloat(), Arguments[7].AsFloat(), Arguments[8].AsFloat(), Arguments[9].AsFloat());
 					break;
 				default:
 					break;
