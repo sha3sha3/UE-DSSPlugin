@@ -137,7 +137,7 @@ Travel node could be called from client side or from server side(with player cha
 7. Yaw: Rotation around Z-Axis Coordinates TravelOptions selected
 ```
 # DSS Server Configuration
-<a href="https://drive.google.com/file/d/1gPP6mAI8ojynlWWPdxKffSI1MPR7EUUX/view?usp=drivesdk">Download DSS Server.</a>
+<a href="https://drive.google.com/file/d/1gPP6mAI8ojynlWWPdxKffSI1MPR7EUUX/view?usp=drive_link">Download DSS Server.</a>
 Make sure to have Curl and Telnet installed on your server
 
 ```json
