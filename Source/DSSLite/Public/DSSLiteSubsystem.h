@@ -6,6 +6,7 @@
 #include "Misc/DateTime.h"
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "TravelingOptions.h"
+#include "Engine/GameInstance.h"
 #include "DSSLiteSubsystem.generated.h"
 
 class IHubConnection;

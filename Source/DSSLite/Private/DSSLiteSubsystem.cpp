@@ -5,6 +5,7 @@
 #include "Engine/Engine.h"
 #include "DSSLiteModule.h"
 #include "GenericPlatform/GenericPlatformMisc.h"
+#include "Misc/CommandLine.h"
 #include "GameFramework/PlayerController.h"
 #include "../ThirdParty/jwt-cpp/jwt.h"
 #include <Runtime/Slate/Public/Framework/Application/SlateApplication.h>
