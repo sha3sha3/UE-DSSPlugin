@@ -19,9 +19,9 @@
 #include <openssl/ec.h>
 #include <openssl/err.h>
 #undef UI
-#ifdef verify
-#undef verify//assertion macros in ue4
-#endif
+//#ifdef verify
+//#undef verify//assertion macros in ue4
+//#endif
 
 
 #include <algorithm>
@@ -684,7 +684,7 @@ namespace jwt {
 			 * \param signature Signature data to verify
 			 * \param ec		error_code filled with details about the error
 			 */
-			void verify(const std::string& /*unused*/, const std::string& signature, std::error_code& ec) const {
+			void verifyToken(const std::string& /*unused*/, const std::string& signature, std::error_code& ec) const {
 				ec.clear();
 				if (!signature.empty()) { ec = error::signature_verification_error::invalid_signature; }
 			}
@@ -729,7 +729,7 @@ namespace jwt {
 			 * \param signature Signature provided by the jwt
 			 * \param ec Filled with details about failure.
 			 */
-			void verify(const std::string& data, const std::string& signature, std::error_code& ec) const {
+			void verifyToken(const std::string& data, const std::string& signature, std::error_code& ec) const {
 				ec.clear();
 				auto res = sign(data, ec);
 				if (ec) return;
@@ -823,7 +823,7 @@ namespace jwt {
 			 * \param signature Signature provided by the jwt
 			 * \param ec Filled with details on failure
 			 */
-			void verify(const std::string& data, const std::string& signature, std::error_code& ec) const {
+			void verifyToken(const std::string& data, const std::string& signature, std::error_code& ec) const {
 				ec.clear();
 #ifdef OPENSSL10
 				std::unique_ptr<EVP_MD_CTX, decltype(&EVP_MD_CTX_destroy)> ctx(EVP_MD_CTX_create(), EVP_MD_CTX_destroy);
@@ -966,7 +966,7 @@ namespace jwt {
 			 * \param signature Signature provided by the jwt
 			 * \param ec Filled with details on error
 			 */
-			void verify(const std::string& data, const std::string& signature, std::error_code& ec) const {
+			void verifyToken(const std::string& data, const std::string& signature, std::error_code& ec) const {
 				ec.clear();
 				const std::string hash = generate_hash(data, ec);
 				if (ec) return;
@@ -1137,7 +1137,7 @@ namespace jwt {
 			 * \param signature Signature provided by the jwt
 			 * \param ec Filled with details on error
 			 */
-			void verify(const std::string& data, const std::string& signature, std::error_code& ec) const {
+			void verifyToken(const std::string& data, const std::string& signature, std::error_code& ec) const {
 				ec.clear();
 				std::unique_ptr<EVP_MD_CTX, decltype(&EVP_MD_CTX_free)> ctx(EVP_MD_CTX_create(), EVP_MD_CTX_free);
 				if (!ctx) {
@@ -1251,7 +1251,7 @@ namespace jwt {
 			 * \param signature Signature provided by the jwt
 			 * \param ec Filled with error details
 			 */
-			void verify(const std::string& data, const std::string& signature, std::error_code& ec) const {
+			void verifyToken(const std::string& data, const std::string& signature, std::error_code& ec) const {
 				ec.clear();
 				auto hash = this->generate_hash(data, ec);
 				if (ec) return;
@@ -2620,14 +2620,14 @@ namespace jwt {
 	class verifier {
 		struct algo_base {
 			virtual ~algo_base() = default;
-			virtual void verify(const std::string& data, const std::string& sig, std::error_code& ec) = 0;
+			virtual void verifyToken(const std::string& data, const std::string& sig, std::error_code& ec) = 0;
 		};
 		template<typename T>
 		struct algo : public algo_base {
 			T alg;
 			explicit algo(T a) : alg(a) {}
-			void verify(const std::string& data, const std::string& sig, std::error_code& ec) override {
-				alg.verify(data, sig, ec);
+			void verifyToken(const std::string& data, const std::string& sig, std::error_code& ec) override {
+				alg.verifyToken(data, sig, ec);
 			}
 		};
 
@@ -2757,9 +2757,9 @@ namespace jwt {
 		 * \param jwt Token to check
 		 * \throw token_verification_exception Verification failed
 		 */
-		void verify(const decoded_jwt<json_traits>& jwt) const {
+		void verifyToken(const decoded_jwt<json_traits>& jwt) const {
 			std::error_code ec;
-			verify(jwt, ec);
+			verifyToken(jwt, ec);
 			error::throw_if_error(ec);
 		}
 		/**
@@ -2767,7 +2767,7 @@ namespace jwt {
 		 * \param jwt Token to check
 		 * \param ec error_code filled with details on error
 		 */
-		void verify(const decoded_jwt<json_traits>& jwt, std::error_code& ec) const {
+		void verifyToken(const decoded_jwt<json_traits>& jwt, std::error_code& ec) const {
 			ec.clear();
 			const typename json_traits::string_type data = jwt.get_header_base64() + "." + jwt.get_payload_base64();
 			const typename json_traits::string_type sig = jwt.get_signature();
@@ -2776,7 +2776,7 @@ namespace jwt {
 				ec = error::token_verification_error::wrong_algorithm;
 				return;
 			}
-			algs.at(algo)->verify(data, sig, ec);
+			algs.at(algo)->verifyToken(data, sig, ec);
 			if (ec) return;
 
 			auto assert_claim_eq = [](const decoded_jwt<json_traits>& jwt, const typename json_traits::string_type& key,
@@ -2890,7 +2890,7 @@ namespace jwt {
 	 * \return verifier instance
 	 */
 	template<typename Clock, typename json_traits>
-	verifier<Clock, json_traits> verify(Clock c) {
+	verifier<Clock, json_traits> verifyToken(Clock c) {
 		return verifier<Clock, json_traits>(c);
 	}
 
@@ -3003,8 +3003,8 @@ namespace jwt {
 	 * Create a verifier using the default clock
 	 * \return verifier instance
 	 */
-	inline verifier<default_clock, picojson_traits> verify() {
-		return verify<default_clock, picojson_traits>(default_clock{});
+	inline verifier<default_clock, picojson_traits> verifyToken() {
+		return verifyToken<default_clock, picojson_traits>(default_clock{});
 	}
 	/**
 	 * Return a picojson builder instance to create a new token
